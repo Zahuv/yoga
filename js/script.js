@@ -33,4 +33,47 @@ window.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+
+    //TIMER
+
+    let deadline = '2023-09-21';                                    //СТАВИМ ДАТУ ЗАВЕРШЕНИЯ РАБОТЫ ТАЙМЕРА 
+
+    function getTimeRemaining(endtime) {                            //СОЗДАЕМ ФУНКЦИЮ КОТОРАЯ БУДЕТ ОПРЕДЕЛЯТЬ СКОЛЬКО ВРЕМЕНИ ОСТАЛОСЬ ОТ НЫНЕШНЕГО МОМЕНТА ДО ДЕДЛАЙНА
+        let t = Date.parse(endtime) - Date.parse(new Date()),       //СОЗДАЕМ ПЕРЕМЕННУЮ В КОТОРУЮ БУДЕМ ЗАПИСЫВАТЬ РАЗНИЦУ МЕЖДУ ДЕДЛАЙНОМ И НЫНЕШНЕЙ ДАТОЙ
+        seconds = Math.floor((t/1000) % 60),                        //ВЫСЧИТЫВАЕМ СЕКУНДЫ
+        minutes = Math.floor((t/1000/60) % 60),                     //ВЫСЧИТЫВАЕМ МИНУТЫ
+        hours = Math.floor((t/(1000*60*60)));                       //ВЫСЧИТЫВАЕМ ЧАСЫ
+
+        //hours = Math.floor((t/1000/60/60) % 24);                  //ВЫСЧИТЫВАЕМ ЧАСЫ В 24-Х ЧАСОВОМ ФОРМАТЕ
+        //days = Math.floor((t/(1000*60*60*24)));                   //ВЫСЧИТЫВАЕМ ДНИ
+
+        return {                                                    //ПРОПИСЫВАЕМ ЧТО ФУНКЦИЯ ДОЛЖНА ВОЗВРАЩАТЬ
+            'total' : t,
+            'hours' : hours,
+            'minutes' : minutes,
+            'seconds' : seconds
+        };
+    }
+
+    function setClock(id, endtime) {                                           //СОЗДАЕМ ФУНКЦИЮ, ДЕЛАЮЩУЮ ВЕРСТКУ ДИНАМИЧНОЙ, ПЕРЕДАЕМ ПАРАМЕТРЫ ID БЛОКА ГДЕ СВЕРСТАН ТАЙМЕР И ДЕДЛАЙН
+        let timer = document.getElementById(id),
+            hours = timer.querySelector('.hours'),
+            minutes = timer.querySelector('.minutes'),
+            seconds = timer.querySelector('.seconds'),
+            timeInterval = setInterval(updateClock, 1000);
+
+        function updateClock() {                                        //СОЗДАЕМ ФУНКЦИЮ КОТОРАЯ КАЖДУЮ СЕКУНДУ БУДЕТ ОБНОВЛЯТЬ ДАННЫЕ В ТАЙМЕРЕ
+            let t = getTimeRemaining(endtime);
+            hours.textContent = t.hours;                                
+            minutes.textContent = t.minutes;
+            seconds.textContent = t.seconds;
+
+            if (t.total <= 0) {
+                clearInterval(timeInterval);
+            } 
+        }
+
+    }
+
+    setClock('timer', deadline);                                                //ВЫЗЫВАЕМ ФУНКЦИЮ УКАЗАВ ID И ПЕРЕМЕННУЮ СОДЕРЖАЩУЮ ДЕДЛАЙН
 });
